@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>wellcom</title>
+<link rel="stylesheet"
+	href="/assets/plugins/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/ant-design-vue@1.6.5/dist/antd.css">
+<script src="/assets/js/jquery-3.3.1.js"></script>
+<script src="/assets/js/axios.min.js"></script>
+<script src="/assets/js/moment.js"></script>
+<script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/js/vue.js"></script>
+
+<script
+	src="https://cdn.jsdelivr.net/npm/ant-design-vue@1.6.5/lib/index.min.js"></script>
+
+
+
+</head>
+<body class="container">
+
+
+	<div id="app">
+		<h4>
+			default URL demo <a href="#">http://ip:port/server</a>
+		</h4>
+		<!-- <el-upload action="upload"
+			:on-preview="handlePreview"  
+			:on-success="successFile"
+		  :limit="3"
+			  > <el-button
+			size="small" type="primary">点击上传</el-button>
+		<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+		</el-upload> -->
+
+		<a-upload name="file" :multiple="true" action="upload"
+			@change="handleChange" :preview="handlePreview">  
+		<a-button> <a-icon type="upload" /> Click to Upload </a-button>
+  </a-upload>  
+	</div>
+</body>
+<script>
+    new Vue({
+      el: '#app',
+      data() {
+        return { visible: false }
+      },
+      methods:{
+    	  handleChange(info) {
+    		  
+    		  debugger
+    		  console.log(info)
+    	   
+    	    },
+    	  handlePreview(file){
+    		  console.log(file)
+    		  console.log(file.response.quicefier)
+    		  console.info(":sdfs")
+    		  window.open(file.response.quicefier)
+    	  },
+    	  successFile(response, file, fileList){
+    		  console.log("response",response)
+    		  console.log("file",file)
+    		  console.log("list",fileList)
+    	  }
+    	  
+      }
+    })
+  </script>
+</html>

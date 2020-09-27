@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head><script src="/assets/js/jquery-3.3.1.js"></script>
+
+<script src="/assets/js/socket.io.js"></script>
+<body>
+
+
+<form action="" method="get" id="vm">
+<input type="text" name="xm" id="vuem">
+<hr>
+<input type="text" name="name" >
+
+
+
+</form>
+<button onclick="send()">发送</button>
+
+  <script>
+    //创建socket
+   
+    var socket = io('http://localhost:9999');//用于连接后端的服务
+    /*
+    创建自定义事件 'news'
+    作用：接受服务端 socket.emit('news', 数据); 发出的数据
+    */
+    socket.on('connect', function () {
+        socket.emit('text', JSON.stringify({userName:"caiyy",passWord:"123456"}));
+    });
+    socket.on('text1', function (data) {
+        //输出服务端响应了数据
+        console.log(data);
+        
+        alert(data)
+    });
+    
+    
+    
+    
+    
+    
+    function send(){
+    	console.log($("#vm").serialize())
+        socket.emit('text', JSON.stringify({"奥拉夫":"dfasdf"}));
+    }
+    </script>
+
+</body>
+</html>

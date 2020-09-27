@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body class="gray-bg">
+    <div id="abs">
+        <div class="wrapper wrapper-content">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h4>CPU</h4>
+
+                            </div>
+                            <div class="ibox-content">
+                                <table class="table table-hover no-margins">
+                                    <thead>
+                                        <tr>
+                                            <th>属性</th>
+                                            <th>值</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>核心数</td>
+                                            <td>{{ server.cpu.cpuNum  }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>用户使用率</td>
+                                            <td>{{server.cpu.used   }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>系统使用率</td>
+                                            <td>{{server.cpu.sys   }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>当前空闲率</td>
+                                            <td>{{server.cpu.free   }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h4>内存</h4>
+
+                            </div>
+                            <div class="ibox-content">
+                                <table class="table table-hover no-margins">
+                                    <thead>
+                                        <tr>
+                                            <th>属性</th>
+                                            <th>内存</th>
+                                            <th>JVM</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>总内存</td>
+                                            <td>{{server.mem.total + 'G'}}</td>
+                                            <td>{{server.jvm.total + 'M'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>已用内存</td>
+                                            <td>{{server.mem.used + 'G'}}</td>
+                                            <td>{{server.jvm.used + 'M'}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>剩余内存</td>
+                                            <td>{{server.mem.free + 'G'}}</td>
+                                            <td>{{server.jvm.free + 'M'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>使用率</td>
+                                            <td>{{server.mem.usage}} %</td>
+                                            <td>{{server.jvm.usage}} %</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h4>服务器信息</h4>
+                                <div class="ibox-tools">
+
+                                </div>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-hover margin bottom">
+                                            <tbody>
+                                                <tr>
+                                                    <td>服务器名称</td>
+                                                    <!--  <td>{{server.sys.computerName}}</td> -->
+                                                    <td> 数字化审计平台</td>
+                                                    <td>操作系统</td>
+                                                    <td>{{server.sys.osName}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>服务器IP</td>
+                                                    <td>{{server.sys.computerIp}}</td>
+                                                    <td>系统架构</td>
+                                                    <td>{{server.jvm.name}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>启动时间</td>
+                                                    <td>{{server.jvm.startTime  }}</td>
+                                                    <td>运行时长</td>
+                                                    <td>{{ runTime  }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h4>磁盘状态</h4>
+                                <div class="ibox-tools">
+
+                                </div>
+                            </div>
+                            <div class="ibox-content">
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-hover margin bottom">
+                                            <thead>
+                                                <tr>
+                                                    <th>盘符路径</th>
+                                                    <th>文件系统</th>
+                                                    <th>盘符类型</th>
+                                                    <th>总大小</th>
+                                                    <th>可用大小</th>
+                                                    <th>已用大小</th>
+                                                    <th>已用百分比</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                <tr v-for='(sysFile, index) in server.sysFiles'>
+                                                    <td>{{sysFile.dirName }}</td>
+                                                    <td>{{sysFile.sysTypeName }}</td>
+                                                    <td>{{sysFile.typeName }}</td>
+                                                    <td>{{sysFile.total }}</td>
+                                                    <td>{{sysFile.free }}</td>
+                                                    <td>{{sysFile.used }}</td>
+                                                    <td>{{sysFile.usage }} %</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+<script>
+    new new Vue({
+        el: "abs",
+        data() {
+            return {
+                Server: {
+                    jvm: {},
+                    sysFiles: {}
+                }
+            }
+        },
+        methods: {
+
+        },
+        computed: {
+            runingTime() {
+                this.server.startTime
+            }
+        },
+        mounted() {
+            console.log("mount")
+        },
+
+    })
+
+
+</script>
+
+<script>
+    let vu = new Vue({
+        el: "#abs",
+        data() {
+            return {
+                msg: "获取Server",
+                runTime: "0天0小时0分",
+                server: {
+                    jvm: {
+                        startTime: ""
+                    },
+                    cpu: {},
+                    mem: {},
+                    sysFiles: [],
+                    sys: {},
+
+                }
+            }
+        },
+        methods: {
+            getServer() {
+                return new Promise((resolve, reject) => {
+                    let url = '#/routingAdv/SYSMONITOR/DEFAULT/server'
+                    let oldTime = ""
+                    $.get(url, (res) => {
+                        this.server = res.server
+                        resolve(res.server.jvm.startTime)
+                    })
+                })
+            },
+            computedRunTime(oldTime) {
+                let old = new Date(oldTime)
+                let now = new Date()
+                let usedTime = now - old
+                let days = Math.floor(usedTime / (24 * 3600 * 1000));
+                //计算出小时数
+                let leave1 = usedTime % (24 * 3600 * 1000);    //计算天数后剩余的毫秒数
+                let hours = Math.floor(leave1 / (3600 * 1000));
+                //计算相差分钟数
+                let leave2 = leave1 % (3600 * 1000);        //计算小时数后剩余的毫秒数
+                let minutes = Math.floor(leave2 / (60 * 1000));
+                let time = days + "天" + hours + "时" + minutes + "分";
+                console.log(time, "time")
+                this.runTime = time
+            }
+        },
+
+        mounted() {
+            this.getServer().then(res => {
+                this.computedRunTime(res)
+            })
+            console.log("mount", this.server)
+
+        },
+
+    })
+
+
+</script>
+
+</html>

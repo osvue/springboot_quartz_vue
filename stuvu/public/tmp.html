@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>仿微信聊天界面</title>
+   <style>
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+body{
+    max-width: 540px;
+}
+a,a:focus{
+    -webkit-tap-highlight-color:transparent
+}
+.flex{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+.container{
+    height: 100%;
+    padding: .3rem .2rem;
+    overflow-y:scroll;
+    background-color: #ebebeb;
+}
+.container .content .item{
+    margin-bottom: .3rem;
+}
+.container .item .header-img{
+    width: .8rem;
+    height: .8rem;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    border-radius: 5px;
+    overflow: hidden;
+    background: transparent;
+}
+.container .item .header-img img{
+    display: block;
+    width: 100%;
+}
+.container .left.item .chat-content{
+    margin-left: .25rem;
+}
+.container .right.item .chat-content{
+    margin-right: .25rem;
+}
+.container .left.item .chat-content p{
+    margin-right: 1.05rem;
+    background: #fff;
+}
+.container .right.item .chat-content p{
+    margin-left: 1.1rem;
+    background: #9EEA6A;
+}
+.container .item .chat-content p{
+    position: relative;
+    padding: .18rem;
+    border:solid 1px #D4D4D4;
+    border-radius: 4px;
+    font-size: .3rem;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+.container .item .chat-content p:before,.container .item .chat-content p:after{
+    content: "";
+    display: block;
+    position: absolute;
+    width:0;
+    height: 0;
+    top: .22rem;
+    border-top: .12rem solid transparent;
+    border-bottom: .12rem solid transparent;
+}
+.container .left.item .chat-content p:before{
+    border-right: .18rem solid #D4D4D4;
+    left: -.18rem;
+}
+.container .left.item .chat-content p:after{
+    border-right: .18rem solid #fff;
+    left: -.16rem;
+}
+.container .right.item .chat-content p:before{
+    border-left: .18rem solid #9EEA6A;
+    right: -.18rem;
+}
+.container .right.item .chat-content p:after{
+    border-left: .18rem solid #9EEA6A;
+    right: -.16rem;
+}
+.container .right.item{
+    flex-direction: row-reverse;
+}
+.container .item p span,.container .item p a{
+    display:inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    text-align:right;
+    font-size:.34rem;
+    color:#7b7a7a;
+}
+.container .item p.img-msg{
+    max-width: 40%;
+}
+.container .right.item p.img-msg{
+    margin-left: 60%;
+}
+.container .item p.img-msg img{
+    display: block;
+    width: 100%;
+}
+.container .item .voice{
+    width: .36rem;
+    height: .4rem;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-image: url(../image/voice_icon.png);
+    background-size: 1.08rem .4rem;
+    background-position: -.72rem center;
+}
+.container .right.item .voice{
+    transform:rotate(180deg);
+}
+.container .item .voice.play{
+    -webkit-animation: voiceplay 1s infinite step-start;
+    -moz-animation: voiceplay 1s infinite step-start;
+    -o-animation: voiceplay 1s infinite step-start;
+    animation: voiceplay 1s infinite step-start;
+} 
+/*弹出层*/
+.win {
+    display: none;
+}
+.mask-layer {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    filter: alpha(opacity=100);
+    background-color: black;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+}
+.win-panel{
+    position: fixed;
+    z-index: 10000;
+    top:50%;
+    left:50%;
+    overflow: hidden;
+    width: 100%;
+    transform:translate(-50%,-50%);
+    transform-origin:50% 50%;
+    text-align: center;
+    background-color: #000;
+}
+.win-panel .win-content img{
+    background-color: #fff;
+}
+
+   </style>
+    <script>
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                    recalc = function () {
+                        var clientWidth = docEl.clientWidth;
+                        if (!clientWidth) return;
+                        if(clientWidth>=640){
+                            docEl.style.fontSize = '85px';
+                        }else{
+                            docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
+                        }
+                    };
+
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="content" id="contentList">
+        <div class="item flex left">
+            <div class="header-img">
+                <img src="http://gbres.dfcfw.com/Files/picture/20180123/size500/8500AF041D0CBA36227FB1FFCD9E1B05.gif">
+            </div>
+            <div class="chat-content">
+                 <p>明天就是周末，晚上去吃火锅吧</p>
+            </div>
+        </div>
+        <div class="item flex right">
+            <div class="header-img">
+                <img src="http://wx3.sinaimg.cn/large/00610vQGly1fkwwq76bkaj30dw0dwq51.jpg">
+            </div>
+            <div class="chat-content">
+                <p>可是我今晚要加班啊，下周再去吃吧，海底捞或者小龙坎，听说美国政府正式"关门" ，特朗普想给民主党下马威，因美国国会和白宫围绕特朗普边境墙计划的拨款问题未达成一致，美国政府于当地时间22日凌晨00:01分(北京时间22日13:00)正式部分关门，CNBC22日对此进行了报道</p>
+            </div>
+        </div>
+        <div class="item flex right">
+            <div class="header-img">
+                <img src="http://wx3.sinaimg.cn/large/00610vQGly1fkwwq76bkaj30dw0dwq51.jpg">
+            </div>
+            <div class="chat-content">
+                <p>
+                    <span class="voice">
+                        <audio preload="auto" no="1" src="//www.baidu.com/15328008019580.mp3" onended="playOver(event)"></audio>
+                    </span>
+                    <a style="width: 1.64rem;">23''</a>
+                </p>
+            </div>
+        </div>
+        <div class="item flex left">
+            <div class="header-img">
+                <img src="http://gbres.dfcfw.com/Files/picture/20180123/size500/8500AF041D0CBA36227FB1FFCD9E1B05.gif">
+            </div>
+            <div class="chat-content">
+                <p>
+                    <span class="voice">
+                        <audio preload="auto" no="2" src="//www.baidu.com/15328008019580.mp3" onended="playOver(event)"></audio>
+                    </span>
+                    <a style="width: 3.4rem;">56''</a>
+                </p>
+            </div>
+        </div>
+        <div class="item flex left">
+            <div class="header-img">
+                <img src="http://gbres.dfcfw.com/Files/picture/20180123/size500/8500AF041D0CBA36227FB1FFCD9E1B05.gif">
+            </div>
+            <div class="chat-content">
+                <p class="img-msg">
+                    <img src="http://wx3.sinaimg.cn/large/006VtoKely1fwijwbe9d7j30dw0dw40r.jpg">
+                </p>
+            </div>
+        </div>
+        <div class="item flex right">
+            <div class="header-img">
+                <img src="http://wx3.sinaimg.cn/large/00610vQGly1fkwwq76bkaj30dw0dwq51.jpg">
+            </div>
+            <div class="chat-content">
+                <p>好啊，那我们就一起</p>
+            </div>
+        </div>
+        <div class="item flex right">
+            <div class="header-img">
+                <img src="http://wx3.sinaimg.cn/large/00610vQGly1fkwwq76bkaj30dw0dwq51.jpg">
+            </div>
+            <div class="chat-content">
+                <p>叫上兔八哥</p>
+            </div>
+        </div>
+        <div class="item flex left">
+            <div class="header-img">
+                <img src="http://gbres.dfcfw.com/Files/picture/20180123/size500/8500AF041D0CBA36227FB1FFCD9E1B05.gif">
+            </div>
+            <div class="chat-content">
+                <p>嗯嗯好哒</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!--展示图片看大图-->
+<div class="win">
+    <div class="mask-layer"></div>
+    <div class="win-panel">
+        <div class="win-content">
+            <img id="showImg" src="">
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<form action="" method="get" id="vm">
+<input type="text" name="xm" id="vuem">
+<hr>
+<input type="text" name="name" >
+
+
+
+</form>
+<button onclick="send()">发送</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script><script>
+    //播放列表
+
+    function send(){
+        $("#vm").serialize()
+        socket.emit('text', JSON.stringify());
+    }
+    var audiolist={};
+    $(function(){
+        $(".container").on('click','.item .chat-content p .voice,.item .chat-content p .voice+a',function(){
+            var audio = $(this).children("audio")[0] || $(this).siblings("span").children("audio")[0];
+            var no = audio.getAttribute("no");
+            if(audio !== null){
+                if(audio.paused){
+                    pauseOther();
+                    audio.play();
+                    $(this).addClass("play");
+                    $(this).siblings(".voice").addClass("play");
+                    audiolist[no]=audio;
+                }else{
+                    $(this).removeClass("play");
+                    $(this).siblings(".voice").removeClass("play");
+                    audio.pause();
+                    delete audiolist[no];
+                }
+            }
+        })
+
+        $(".container").on('click','.item .chat-content p.img-msg img',function(){
+            var screenWidth = $(window).width();
+            $("#showImg").attr("src",$(this).attr("src"));
+            $("<img/>").attr("src", $(this).attr("src")).load(function() {
+                realWidth = this.width;
+                realHeight = this.height;
+                //如果真实的宽度大于浏览器的宽度就按照100%显示
+                if(realWidth>=screenWidth){
+                    $("#showImg").css("width","100%").css("height","auto");
+                }
+                else{//如果小于浏览器的宽度按照原尺寸显示
+                    $("#showImg").css("width",realWidth+'px').css("height",realHeight+'px');
+                }
+            });
+            $('.win').fadeIn("3000");
+        })
+        $("#showImg").click(function(){
+            $('.win').fadeOut("3000",function(){
+                $(this).attr("src","");
+            });
+        });
+
+    })
+    /*播放结束停止动画*/
+    function playOver(event){
+        var no =$(event.target).attr("no");
+        delete audiolist[no];
+        $(event.target).parent(".voice").removeClass("play");
+    }
+    /*关闭其他的语音*/
+    function pauseOther(){
+        for (var i in audiolist){
+            audiolist[i].pause();
+            $(audiolist[i]).parent().removeClass("play");
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
+<title>Bootstrap TreeView</title>
+ <link rel="stylesheet" href="/assets/plugins/bootstrap/css/bootstrap.min.css">
+<link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css" rel="stylesheet"> 
+ <style>
+#tv {
+	border: 1px solid #D6D6D6;
+	display: none;
+	margin-top: 5px;
+	width: 300px;
+	height: 400px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	position: absolute;
+}
+</style>
+
+  <script src="/assets/js/jquery-3.3.1.js"></script>
+  <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
+</head>
+<body>
+<h4>
+${ctx}</h4>
+<button onclick='clickTo()'>refrer</button>
+ <a href="${ctx}/server">
+Virtual machine information</a>
+	<div style="margin-left: 200px; margin-top: 50px;">
+		<input id="region" class="form-control" placeholder="请选择区域"
+			style="width: 200px;" />
+		<div id="tv"></div>
+	</div>
+
+	<script>
+		function clickTo(){
+			
+			$.get(`${ctx}/getms`,(res)=>{
+				console.log(res)
+				alert(res)
+			})
+		}
+	
+		$(document).ready(function() {
+			var nodeData = [];
+
+			$.ajax({
+				url : '/getNodes',
+				type : 'post',
+				dataType : 'json',
+				async : false,
+				success : function(data) {
+					nodeData = data;
+				}
+			})
+
+			$('#tv').treeview({
+				data : nodeData, // 节点数据
+				levels : 1, // 节点层级数
+				color : "#000", // 每一级通用的 节点字体颜色
+				backColor : "#fff", // 每一级通用的 节点字背景色
+				onhoverColor : "skyblue", // 选中浮动颜色
+				showBorder : false, // 不显示边框
+				showTags : true, // 是否在每个节点的右侧显示标签。 其值必须在每个节点的数据结构中提供
+				highlightSelected : true, // 是否突出显示选定的节点
+				selectedColor : "#fff", // 设置选定节点的前景色
+				selectedBackColor : "skyblue", // 设置选定节点的背景色
+				onNodeSelected : function(event, data) {
+					$('#region').val(data.text);
+					$('#tv').hide();
+				}
+			})
+
+			$('#region').click(function() {
+				$('#tv').show();
+			})
+		})
+	</script>
+</body>
+</html>
